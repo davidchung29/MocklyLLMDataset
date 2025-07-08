@@ -3,7 +3,7 @@ import os
 import subprocess
 from yt_dlp import YoutubeDL
 
-def download_and_convert_audio(input_csv, output_folder):
+def download_wav(input_csv, output_folder):
     #ffmpeg_path = r'C:\ProgramData\chocolatey\bin\ffmpeg.exe' - this was b/c ffmpeg path was not added to myenv
     #os.makedirs(output_folder, exist_ok=True)
 
@@ -43,4 +43,4 @@ def download_and_convert_audio(input_csv, output_folder):
 if __name__ == "__main__":
     input_csv = 'data/scraped_links.csv'
     output_folder = 'data/downloaded_audio_new'
-    download_and_convert_audio(input_csv, output_folder)
+    download_wav(input_csv, output_folder)

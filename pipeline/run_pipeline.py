@@ -7,13 +7,15 @@ def main():
     scrape_youtube.scrape(query="behavioral interview answer", n_results=1)
 
     print("\nWAV DOWNLOAD IN PROGRESS")
-    download_wav.download_wav(input_csv="data/scraped_links.csv")
+    download_wav.download_wav(
+        input_csv="data/scraped_links.csv",
+        output_folder="data/downloaded_audio_new"
+    )
 
     print("\nTRANSCRIPTION IN PROGRESS")
     transcribe_json.transcribe_json(
         input_folder="data/downloaded_audio_new",
         output_folder="data/asr_transcripts",
-        model_name="tiny"
     )
 
 if __name__ == "__main__":
