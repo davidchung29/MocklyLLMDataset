@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\luzij\OneDrive\Documents\GitHub\CSYA-Behavioral-Dataset\myenv"
+VIRTUAL_ENV="C:\Users\luzij\OneDrive\Documents\GitHub\MocklyLLMDataset\myenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
