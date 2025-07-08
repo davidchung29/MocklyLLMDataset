@@ -1,3 +1,4 @@
+#uses OpenAI's Whisper ASR system to transcribe wav files
 import os
 import whisper
 import json
