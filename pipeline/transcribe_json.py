@@ -2,7 +2,7 @@ import os
 import whisper
 import json
 
-def transcribe_wav_files(input_folder, output_folder):
+def transcribe_json(input_folder, output_folder):
     model = whisper.load_model("tiny")  #faster but less accurate
     #os.makedirs(output_folder, exist_ok=True)
 
@@ -36,4 +36,4 @@ def transcribe_wav_files(input_folder, output_folder):
 if __name__ == "__main__":
     input_folder = "data/downloaded_audio_new"
     output_folder = "data/asr_transcripts"
-    transcribe_wav_files(input_folder, output_folder)
+    transcribe_json(input_folder, output_folder)
