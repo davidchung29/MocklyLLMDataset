@@ -3,8 +3,8 @@ import os
 import subprocess
 from yt_dlp import YoutubeDL
 
-input_csv = 'data/youtube_links.csv'
-output_folder = 'data/downloaded_audio'
+input_csv = 'data/scraped_links.csv'
+output_folder = 'data/downloaded_audio_new'
 #ffmpeg_path = r'C:\ProgramData\chocolatey\bin\ffmpeg.exe' - this was b/c ffmpeg path was not added to myenv
 #os.makedirs(output_folder, exist_ok=True)
 
