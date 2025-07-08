@@ -1,11 +1,12 @@
+#uses OpenAI's Whisper ASR system to transcribe wav files
 import os
 import whisper
 import json
 
-input_folder = "data/downloaded_audio"
+input_folder = "data/downloaded_audio_new"
 output_folder = "data/asr_transcripts"
 #os.makedirs(output_folder, exist_ok=True)
-model = whisper.load_model("base")  #faster but less accurate
+model = whisper.load_model("tiny")  #faster but less accurate
 
 for file in os.listdir(input_folder):
     if file.lower().endswith(".wav"):
