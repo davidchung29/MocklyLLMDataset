@@ -4,7 +4,7 @@ from pipeline import transcribe_json
 
 def main():
     print("SCRAPE IN PROGRESS")
-    scrape_youtube.scrape(query="behavioral interview answer", n_results=1)
+    scrape_youtube.scrape(query="behavioral interview answer", n_results=1) # change this, 1 was just for testing
 
     print("\nWAV DOWNLOAD IN PROGRESS")
     download_wav.download_wav(
