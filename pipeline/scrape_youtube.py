@@ -3,7 +3,7 @@ import csv
 from yt_dlp import YoutubeDL
 
 def scrape(
-    query="behavioral interview",
+    query="behavioral interview answer",
     n_results=10,
     output_csv="data/scraped_links.csv"
 ):
@@ -18,7 +18,7 @@ def scrape(
     }
 
     with YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(f"ytsearchdate{n_results}:{query}", download=False)
+        info = ydl.extract_info(f"ytsearch{n_results}:{query}", download=False)
     videos = info.get('entries', [])[:n_results]
 
     with open(output_csv, "w", newline='') as csvfile:
@@ -27,7 +27,6 @@ def scrape(
         for v in videos:
             if v and 'id' in v:
                 writer.writerow([f"https://www.youtube.com/watch?v={v['id']}"])
-
     print(f"saved {len(videos)} videos to {output_csv}")
 
 if __name__ == "__main__":
