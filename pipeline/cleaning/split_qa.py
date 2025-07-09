@@ -2,7 +2,7 @@ import os
 import json
 import re
 from fix_punctuation import fix_punctuation
-from remove_filler import remove_filler
+#from remove_filler import remove_filler
 
 DATA_FOLDER = "data/asr_transcripts"
 OUTPUT_FOLDER = "data/qa_output"
@@ -25,7 +25,7 @@ def is_question(sentence):
     return False
 
 def split_into_qa(text):
-    text = remove_filler(text)
+    #text = remove_filler(text)
     text = fix_punctuation(text)
     sentences = re.split(r'(?<=[.!?])\s+', text)
 
@@ -51,8 +51,6 @@ def split_into_qa(text):
         else:
             answer_parts.append(sent)
         i += 1
-
-    # Append last Q&A
     if question is not None:
         answer = " ".join(answer_parts).strip()
         qas.append({"question": question, "answer": answer})

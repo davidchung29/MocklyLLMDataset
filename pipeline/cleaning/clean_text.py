@@ -1,5 +1,5 @@
 from fix_punctuation import fix_punctuation
-from remove_filler import remove_filler
+#from remove_filler import remove_filler
 
 if __name__ == "__main__":
     examples = [
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     for text in examples:
         print(f"original: {repr(text)}")
-        no_fillers = remove_filler(text)
-        print(f"after remove_filler: {repr(no_fillers)}")
-        fixed = fix_punctuation(no_fillers)
+        #no_fillers = remove_filler(text)
+        #print(f"after remove_filler: {repr(no_fillers)}")
+        fixed = fix_punctuation(text)
         print(f"after fix_punctuation: {repr(fixed)}\n")
