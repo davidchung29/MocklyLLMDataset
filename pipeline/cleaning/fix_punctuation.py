@@ -6,9 +6,11 @@ def is_question(text):
     if text.endswith('?'):
         return True
     question_starters = (
-        "who", "what", "when", "where", "why", "how",
+        "what", "where", "why", "how",
         "do", "did", "does", "can", "could", "would", "should",
-        "are", "will"
+        "are", "will",
+        "tell me", "describe", "give me", "can you", "if you could",
+        "explain", "walk me through", "how would you"
     )
     for starter in question_starters:
         pattern = rf"^{starter}\b"
