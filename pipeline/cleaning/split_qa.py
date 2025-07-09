@@ -28,14 +28,20 @@ def split_into_qa(text):
     text = remove_filler(text)
     text = fix_punctuation(text)
     sentences = re.split(r'(?<=[.!?])\s+', text)
+
     qas = []
     question = None
     answer_parts = []
 
-    for sent in sentences:
+    i = 0
+    while i < len(sentences) and not is_question(sentences[i]):
+        i += 1
+
+    while i < len(sentences):
+        sent = sentences[i].strip()
         if is_question(sent):
             if question is not None and not answer_parts:
-                question += " " + sent #merge consecutive questions
+                question += " " + sent
             else:
                 if question is not None:
                     answer = " ".join(answer_parts).strip()
@@ -43,7 +49,10 @@ def split_into_qa(text):
                     answer_parts = []
                 question = sent
         else:
-            answer_parts.append(sent.strip())
+            answer_parts.append(sent)
+        i += 1
+
+    # Append last Q&A
     if question is not None:
         answer = " ".join(answer_parts).strip()
         qas.append({"question": question, "answer": answer})
