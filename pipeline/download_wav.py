@@ -25,6 +25,10 @@ def download_wav(input_csv, output_folder):
                 webm_file = os.path.join(output_folder, f"{info['id']}.webm")
                 wav_file = os.path.join(output_folder, f"{info['id']}.wav") #converted
 
+                if os.path.exists(wav_file):
+                    print(f"already exists, skipping: {wav_file}")
+                    continue
+
                 #command for webm --> wav
                 command = [
                     "ffmpeg",
