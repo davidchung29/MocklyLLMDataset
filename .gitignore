@@ -210,5 +210,5 @@ __marimo__/
 
 
 
-
 myenv/Scripts/ffmpeg
+.env
