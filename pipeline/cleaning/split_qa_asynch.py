@@ -69,7 +69,7 @@ Is it a question?"""
             print(f"API error on sentence: {text[:40]}... : {e}")
             return False
 
-
+'''
 async def is_narrator_comment_api(text: str) -> bool:
     async with semaphore:
         messages = [
@@ -110,7 +110,7 @@ Is it a narrator comment?"""
         except Exception as e:
             print(f"API error on narrator comment check: {text[:40]}... : {e}")
             return False
-
+'''
 
 async def fix_punctuation(text: str) -> str:
     text = text.strip()
@@ -133,14 +133,11 @@ async def split_into_qa(text):
     answer_parts = []
     i = 0
     while i < len(sentences):
-        if await is_question_api(sentences[i]) and not await is_narrator_comment_api(sentences[i]):
+        if await is_question_api(sentences[i]): #and not await is_narrator_comment_api(sentences[i]):
             break
         i += 1
     while i < len(sentences):
         sent = sentences[i].strip()
-        if await is_narrator_comment_api(sent):
-            i += 1
-            continue  # skip narrator/analyst comments
         if await is_question_api(sent):
             if question is not None and not answer_parts:
                 question += " " + sent
