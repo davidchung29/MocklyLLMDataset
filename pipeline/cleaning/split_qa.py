@@ -14,10 +14,38 @@ headers = {
 }
 
 def is_question_api(text: str) -> bool:
-    prompt = f"Is the following sentence a question? Reply with 'yes' or 'no'.\n\n\"{text.strip()}\""
+    #prompt = f"Is the following sentence a question? Reply with 'yes' or 'no'.\n\n\"{text.strip()}\""
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a data cleaner. Your only job is to categorize whether a sentence is a question. "
+                "Do not alter or summarize the sentence. Only reply with 'yes' or 'no'."
+            )
+        },
+        {
+            "role": "user",
+            "content": f"""Here are some examples:
+
+Sentence: "Can you describe a time when you had to lead a project under pressure and how you managed competing priorities, communicated with your team, and adjusted timelines to still meet the goal?"
+Is it a question? Yes
+
+Sentence: "During my internship at Amazon, I led a cross-functional project where I had to prioritize conflicting deadlines and manage communication between five teams."
+Is it a question? No
+
+Sentence: "Tell me about a failure you experienced and how you handled it."
+Is it a question? Yes
+
+Sentence: "I failed a major exam once but learned to manage my time better afterward."
+Is it a question? No
+
+Sentence: "{text.strip()}"
+Is it a question?"""
+        }
+    ]
     data = {
         "model": "openai/gpt-4o",
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": messages #[{"role": "user", "content": prompt}]
     }
     response = requests.post(url, headers=headers, json=data)
     if response.status_code == 200:
