@@ -1,0 +1,34 @@
+<!--
+    This Label Studio labeling config displays an interview question and its answer,
+    then allows annotators to rate the response using the STAR framework (Situation, Task,
+    Action, Result), each on a scale of 1–3. Additionally, the annotator provides an overall
+    quality score (1–5).
+
+  @annotations
+    - STAR Ratings (S, T, A, R): 1 to 3
+    - Quality: 1 to 5
+
+  @usage
+    - place this XML in Label Studio during project setup under "Labeling Interface"
+    - Supports JSONL input format: {"id": ..., "data": { "question": "...", "answer": "...", "clarity": float }}
+-->
+
+<View>
+  <Header value="Question" />
+  <Text name="qtext" value="$question" />
+
+  <Header value="Answer" />
+  <Text name="atext" value="$answer" />
+
+  <Header value="clarity (auto-calculated)" />
+  <Text name="clarity_score" value="Clarity: $clarity" />
+
+  <Header value="rate STAR components (1–3 points each)" />
+  <Rating name="s_score" toName="atext" minRating="1" maxRating="3" label="S (Situation)" />
+  <Rating name="t_score" toName="atext" minRating="1" maxRating="3" label="T (Task)" />
+  <Rating name="a_score" toName="atext" minRating="1" maxRating="3" label="A (Action)" />
+  <Rating name="r_score" toName="atext" minRating="1" maxRating="3" label="R (Result)" />
+
+  <Header value="overall quality (1–5)" />
+  <Rating name="quality" toName="atext" minRating="1" maxRating="5" />
+</View>
