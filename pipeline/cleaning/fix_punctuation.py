@@ -13,7 +13,6 @@ headers = {
 }
 
 def is_question_api(text: str) -> bool:
-    """Use API to determine if the sentence is a question."""
     prompt = f"Is the following sentence a question? Reply with 'yes' or 'no'.\n\n\"{text.strip()}\""
     data = {
         "model": "openai/gpt-4o",
