@@ -40,6 +40,30 @@ def fix_punctuation(text: str) -> str:
     return text[0].upper() + text[1:]
 #
 
+'''
+def remove_comments(answer_text: str, question_text: str) -> str:
+    #remove sentences from the answer that are not directly answering the question.
+    prompt = (
+        f"Remove any narrator comments or irrelevant parts from the following response. "
+        f"Only keep content that directly answers the question.\n\n"
+        f"Question: \"{question_text.strip()}\"\n"
+        f"Response: \"{answer_text.strip()}\"\n\n"
+        f"Cleaned response:"
+    )
+    data = {
+        "model": "openai/gpt-4o",
+        "messages": [{"role": "user", "content": prompt}]
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        cleaned = response.json()["choices"][0]["message"]["content"].strip()
+        return cleaned
+    else:
+        print(f"API error: {response.status_code} - {response.text}")
+        return answer_text
+'''
+
 def split_into_qa(text):
     text = fix_punctuation(text)
     sentences = re.split(r'(?<=[.!?])\s+', text)
@@ -61,8 +85,8 @@ def split_into_qa(text):
                 question += " " + sent
             else:
                 if question is not None:
-                    answer = " ".join(answer_parts).strip()
-                    qas.append({"question": question, "answer": answer})
+                    raw_answer = " ".join(answer_parts).strip()
+                    qas.append({"question": question, "answer": raw_answer})
                     answer_parts = []
                 question = sent
         else:
