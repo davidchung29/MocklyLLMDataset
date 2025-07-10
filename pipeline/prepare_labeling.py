@@ -2,7 +2,6 @@ import os
 import json
 import re
 
-# filler words/phrases to count
 FILLERS = [
     "uh", "um", "like", "you know", "i mean",
     "so", "actually", "basically"
@@ -20,13 +19,11 @@ def get_clarity(text: str) -> float:
 
     filler_count = 0
 
-    # count multi-word phrases like "you know"
     for phrase in [f for f in FILLERS if " " in f]:
         pattern = r"\b" + re.escape(phrase) + r"\b"
         matches = re.findall(pattern, text_lower)
         filler_count += len(matches)
 
-    # count single-word fillers
     words = re.findall(r"\b\w+\b", text_lower)
     filler_count += sum(1 for word in words if word in FILLERS)
 
@@ -35,10 +32,12 @@ def get_clarity(text: str) -> float:
 def combine_and_enrich(input_folder: str, output_file: str):
     """
     combines all jsonl files in input_folder into one jsonl file with extra fields:
+    - wraps inside { "id": ..., "data": { ... } }
     - empty STAR fields
     - null quality
     - clarity score
     """
+    uid = 1
     with open(output_file, "w", encoding="utf-8") as out_f:
         for filename in os.listdir(input_folder):
             if filename.endswith(".jsonl"):
@@ -49,19 +48,23 @@ def combine_and_enrich(input_folder: str, output_file: str):
                             item = json.loads(line)
                             clarity = get_clarity(item.get("answer", ""))
                             enriched = {
-                                "question": item.get("question", ""),
-                                "answer": item.get("answer", ""),
-                                "situation": "",
-                                "task": "",
-                                "action": "",
-                                "result": "",
-                                "quality": None,
-                                "clarity": clarity
+                                "id": str(uid),
+                                "data": {
+                                    "question": item.get("question", ""),
+                                    "answer": item.get("answer", ""),
+                                    "situation": "",
+                                    "task": "",
+                                    "action": "",
+                                    "result": "",
+                                    "quality": None,
+                                    "clarity": clarity
+                                }
                             }
                             out_f.write(json.dumps(enriched, ensure_ascii=False) + "\n")
+                            uid += 1
                         except Exception as err:
                             print(f"skipped one due to error: {err}")
-    print(f"saved enriched file to: {output_file}")
+    print(f"saved file to: {output_file}")
 
 def main():
     input_folder = "data/qa_output"
