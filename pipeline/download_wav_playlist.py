@@ -1,3 +1,8 @@
+"""
+this script reads playlist urls from a csv file and downloads all audio tracks
+it saves the audio as webm files, then converts them to 16kHz mono wav files using ffmpeg
+if the wav file is created, it deletes the original webm file to save space
+"""
 # THIS VERSION IS FOR PLAYLISTS, NOT SINGLE VIDEOS
 
 import csv

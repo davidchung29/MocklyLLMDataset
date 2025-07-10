@@ -1,3 +1,11 @@
+"""
+this script runs the base pipeline:
+- scrapes youtube videos with a query and saves links
+- downloads audio wav files from the scraped video links
+- transcribes the audio files into json transcripts
+"""
+
+
 from pipeline import scrape_youtube
 from pipeline import download_wav
 from pipeline import transcribe_json

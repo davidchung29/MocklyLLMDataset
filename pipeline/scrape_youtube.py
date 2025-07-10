@@ -1,3 +1,11 @@
+"""
+this script searches youtube for videos matching a query
+it saves the video urls (up to n_results) into a csv file
+
+functions:
+- scrape(query, n_results, output_csv): searches youtube and saves urls to csv
+"""
+
 import os
 import csv
 from yt_dlp import YoutubeDL

@@ -1,3 +1,8 @@
+"""
+this script loads the openrouter api key from the environment
+and prints 'success' if the key is found, or 'failed' if not
+"""
+
 import os
 from dotenv import load_dotenv
 

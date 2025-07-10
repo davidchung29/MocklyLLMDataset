@@ -1,3 +1,9 @@
+"""
+this script removes common filler words like 'uh', 'um', and 'like' from text.
+it also cleans extra spaces and punctuation at the start and end,
+and capitalizes the first letter of the cleaned text.
+"""
+
 import re
 import string
 

@@ -1,3 +1,16 @@
+"""
+this script splits a transcript into question and answer pairs.
+it finds questions by looking for question words or question marks
+and groups sentences after questions as answers, does not use ai API
+
+functions:
+- is_question(sentence): returns true if the sentence looks like a question
+- split_into_qa(text): splits the text into a list of question-answer dicts
+- process_file(filepath): loads json file and splits its text
+
+the script processes all json files in the data folder and saves results
+"""
+
 import os
 import json
 import re

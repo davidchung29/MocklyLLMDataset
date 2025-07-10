@@ -1,3 +1,9 @@
+"""
+this script reads youtube urls from a csv file and downloads audio from each url
+it saves the audio as webm files, then converts them to 16kHz mono wav files using ffmpeg
+if the wav file already exists, it skips downloading and deletes the webm file
+"""
+
 import csv
 import os
 import subprocess

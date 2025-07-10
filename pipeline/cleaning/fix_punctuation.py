@@ -1,3 +1,12 @@
+"""
+this script checks if a sentence is a question using an ai api
+and fixes punctuation by adding a question mark or period if needed
+
+functions:
+- is_question_api(text): returns True if the text is a question, False otherwise
+- fix_punctuation(text): cleans up spaces and adds correct punctuation at the end
+"""
+
 import os
 import re
 import requests
