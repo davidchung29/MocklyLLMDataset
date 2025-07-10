@@ -1,9 +1,10 @@
 import os
 import json
 import re
-import requests
+import asyncio
+import httpx
 from dotenv import load_dotenv
-#
+
 load_dotenv()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 
@@ -13,19 +14,22 @@ headers = {
     "Content-Type": "application/json",
 }
 
-def is_question_api(text: str) -> bool:
-    #prompt = f"Is the following sentence a question? Reply with 'yes' or 'no'.\n\n\"{text.strip()}\""
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a data cleaner. Your only job is to categorize whether a sentence is a question. "
-                "Do not alter or summarize the sentence. Only reply with 'yes' or 'no'."
-            )
-        },
-        {
-            "role": "user",
-            "content": f"""Here are some examples:
+semaphore = asyncio.Semaphore(12) #limits number of async tasks
+async_client = None 
+
+async def is_question_api(text: str) -> bool:
+    async with semaphore:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a data cleaner. Your only job is to categorize whether a sentence is a question. "
+                    "Do not alter or summarize the sentence. Only reply with 'yes' or 'no'."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"""Here are some examples:
 
 Sentence: "Can you describe a time when you had to lead a project under pressure and how you managed competing priorities, communicated with your team, and adjusted timelines to still meet the goal?"
 Is it a question? Yes
@@ -41,59 +45,35 @@ Is it a question? No
 
 Sentence: "{text.strip()}"
 Is it a question?"""
+            }
+        ]
+        data = {
+            "model": "openai/gpt-4o",
+            "messages": messages
         }
-    ]
-    data = {
-        "model": "openai/gpt-4o",
-        "messages": messages #[{"role": "user", "content": prompt}]
-    }
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        reply = response.json()["choices"][0]["message"]["content"].strip().lower()
-        return "yes" in reply
-    else:
-        print(f"API error: {response.status_code} - {response.text}")
-        return False
+        try:
+            response = await async_client.post(url, headers=headers, json=data, timeout=20)
+            response.raise_for_status()
+            reply = response.json()["choices"][0]["message"]["content"].strip().lower()
+            return "yes" in reply
+        except Exception as e:
+            print(f"API error on sentence: {text[:40]}... : {e}")
+            return False
 
-def fix_punctuation(text: str) -> str:
+async def fix_punctuation(text: str) -> str:
     text = text.strip()
     text = re.sub(r'\s+', ' ', text)
     if not text:
         return ""
     if text[-1] not in ".!?":
-        if is_question_api(text):
+        if await is_question_api(text):
             text += "?"
         else:
             text += "."
     return text[0].upper() + text[1:]
-#
 
-'''
-def remove_comments(answer_text: str, question_text: str) -> str:
-    #remove sentences from the answer that are not directly answering the question.
-    prompt = (
-        f"Remove any narrator comments or irrelevant parts from the following response. "
-        f"Only keep content that directly answers the question.\n\n"
-        f"Question: \"{question_text.strip()}\"\n"
-        f"Response: \"{answer_text.strip()}\"\n\n"
-        f"Cleaned response:"
-    )
-    data = {
-        "model": "openai/gpt-4o",
-        "messages": [{"role": "user", "content": prompt}]
-    }
-
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        cleaned = response.json()["choices"][0]["message"]["content"].strip()
-        return cleaned
-    else:
-        print(f"API error: {response.status_code} - {response.text}")
-        return answer_text
-'''
-
-def split_into_qa(text):
-    text = fix_punctuation(text)
+async def split_into_qa(text):
+    text = await fix_punctuation(text)
     sentences = re.split(r'(?<=[.!?])\s+', text)
 
     qas = []
@@ -102,13 +82,13 @@ def split_into_qa(text):
 
     i = 0
     while i < len(sentences):
-        if is_question_api(sentences[i]):
+        if await is_question_api(sentences[i]):
             break
         i += 1
 
     while i < len(sentences):
         sent = sentences[i].strip()
-        if is_question_api(sent):
+        if await is_question_api(sent):
             if question is not None and not answer_parts:
                 question += " " + sent
             else:
@@ -127,16 +107,19 @@ def split_into_qa(text):
 
     return qas
 
-def process_file(filepath):
+async def process_file_async(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
     full_text = data.get("text", "")
-    return split_into_qa(full_text)
+    return await split_into_qa(full_text)
 
-if __name__ == "__main__":
+async def main():
+    global async_client
+    async_client = httpx.AsyncClient()
+
     DATA_FOLDER = "data/asr_transcripts"
     OUTPUT_FOLDER = "data/qa_output"
-    
+
     all_files = [f for f in os.listdir(DATA_FOLDER) if f.endswith(".json")]
     limit = input(f"{len(all_files)} JSON files. how many to process? (-1 for all): ")
     try:
@@ -148,12 +131,16 @@ if __name__ == "__main__":
     if limit == -1 or limit > len(all_files):
         limit = len(all_files)
 
+    tasks = []
     for filename in all_files[:limit]:
         path = os.path.join(DATA_FOLDER, filename)
         print(f"processing {filename}")
-        qa_pairs = process_file(path)
-        print(f"{len(qa_pairs)} Q&A pairs.")
+        tasks.append(process_file_async(path))
 
+    results = await asyncio.gather(*tasks)
+
+    for filename, qa_pairs in zip(all_files[:limit], results):
+        print(f"{len(qa_pairs)} Q&A pairs.")
         base_name = filename.replace(".wav.json", "")
         out_path = os.path.join(OUTPUT_FOLDER, base_name + "_qa.jsonl")
         with open(out_path, "w", encoding="utf-8") as out_file:
@@ -161,3 +148,8 @@ if __name__ == "__main__":
                 json_line = json.dumps(qa, ensure_ascii=False)
                 out_file.write(json_line + "\n")
         print(f"saved to {out_path}\n")
+
+    await async_client.aclose()
+
+if __name__ == "__main__":
+    asyncio.run(main())
