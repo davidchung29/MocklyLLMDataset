@@ -12,7 +12,7 @@ from pipeline import transcribe_json
 
 def main():
     print("SCRAPE IN PROGRESS")
-    scrape_youtube.scrape(query="behavioral interview answer", n_results=2) # change this, 2 was just for testing
+    scrape_youtube.scrape(query="behavioral interview answer", n_results=75) # change this, 2 was just for testing
 
     print("\nWAV DOWNLOAD IN PROGRESS")
     download_wav.download_wav(
