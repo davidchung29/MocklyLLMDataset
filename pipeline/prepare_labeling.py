@@ -29,7 +29,7 @@ def get_clarity(text: str) -> float:
 
     return round(filler_count / total_words, 4)
 
-def combine_and_enrich(input_folder: str, output_file: str):
+def combine_and_enrich(input_folder: str, combined_output_file: str):
     """
     combines all jsonl files in input_folder into one jsonl file with extra fields:
     - wraps inside { "id": ..., "data": { ... } }
@@ -38,7 +38,9 @@ def combine_and_enrich(input_folder: str, output_file: str):
     - clarity score
     """
     uid = 1
-    with open(output_file, "w", encoding="utf-8") as out_f:
+    os.makedirs(os.path.dirname(combined_output_file), exist_ok=True)
+
+    with open(combined_output_file, "w", encoding="utf-8") as out_f:
         for filename in os.listdir(input_folder):
             if filename.endswith(".jsonl"):
                 path = os.path.join(input_folder, filename)
@@ -64,13 +66,32 @@ def combine_and_enrich(input_folder: str, output_file: str):
                             uid += 1
                         except Exception as err:
                             print(f"skipped one due to error: {err}")
-    print(f"saved file to: {output_file}")
+
+    print(f"saved combined file to: {combined_output_file}")
+
+def jsonl_to_json_array(jsonl_path: str, json_path: str):
+    """
+    reads a jsonl file and converts it to a json array file
+    """
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    data = [json.loads(line) for line in lines]
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+    print(f"saved json array file to: {json_path}")
 
 def main():
     input_folder = "data/qa_output"
-    output_file = "data/for_labeling/combined_star_clarity.jsonl"
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    combine_and_enrich(input_folder, output_file)
+    combined_output_file = "data/for_labeling/star_data/combined_star_clarity.jsonl"
+    json_array_output_file = "data/for_labeling/star_data/combined_star_clarity_array.json"
+
+    combine_and_enrich(input_folder, combined_output_file)
+    jsonl_to_json_array(combined_output_file, json_array_output_file)
 
 if __name__ == "__main__":
     main()
