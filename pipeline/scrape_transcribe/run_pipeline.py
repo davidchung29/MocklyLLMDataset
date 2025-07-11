@@ -6,9 +6,9 @@ this script runs the base pipeline:
 """
 
 
-from pipeline import scrape_youtube
-from pipeline import download_wav
-from pipeline import transcribe_json
+from pipeline.scrape_transcribe import scrape_youtube
+from pipeline.scrape_transcribe import download_wav
+from pipeline.scrape_transcribe import transcribe_json
 
 def main():
     print("SCRAPE IN PROGRESS")
