@@ -6,7 +6,8 @@ well-labeled transcripts that will serve as the foundation for evaluating candid
 
 ## Project Structure
 
-mocklyllmdataset/
+MocklyLLMDataset/
+
 
 │
 ├── data/
