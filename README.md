@@ -10,10 +10,15 @@ MocklyLLMDataset/
 
 
 │
+
 ├── data/
+
 │   ├── asr_transcripts/           # transcribed json files from whisper (wav → text)
+
 │   ├── downloaded_audio/          # wav files from video downloads
+
 │   ├── qa_output/                 # .jsonl files split into q&a pairs (post-cleaning + api)
+
 │   ├── for_labeling/              # array of json-formatted q&a data for label studio
  
 │   ├── labeled_dataset/           # exported and cleaned json files from label studio
