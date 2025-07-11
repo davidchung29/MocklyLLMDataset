@@ -39,3 +39,25 @@ mocklyllmdataset/
 1. Create and activate a Python virtual environment.
 2. Install dependencies: `pip install -r requirements.txt`
 3. Set environment variables in a `.env` file:
+OPENAI_API_KEY=your_api_key_here
+LOCAL_FILES_SERVING_ENABLED=true
+LOCAL_FILES_DOCUMENT_ROOT=path/to/your/for_labeling/folder
+
+
+## Usage
+
+1. Run full pipeline: `python pipeline/scrape_transcribe/run_pipeline.py`
+2. Clean and split transcripts into question-answer pairs:
+- Basic: `python pipeline/cleaning/basic/split_qa.py`
+- OpenAI API (sync): `python pipeline/cleaning/split_qa_synch.py`
+- OpenAI API (async): `python pipeline/cleaning/split_qa_asynch.py`
+3. Convert split Q&A to Label Studio format: `python pipeline/prepare_labeling.py`
+4. Start Label Studio locally: `label-studio start`
+5. Post-processing:
+- Remove narrator comments: `python pipeline/cleaning/remove_comments.py`
+- Compute dataset statistics: `python pipeline/data.py`
+
+## Notes and Future Work
+* Implement improved narrator comment removal
+* Integrate cloud storage for wav files
+* Build mini dashboards to visualize dataset coverage
