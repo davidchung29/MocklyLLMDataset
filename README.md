@@ -6,7 +6,8 @@ well-labeled transcripts that will serve as the foundation for evaluating candid
 
 ## Project Structure
 
-mocklyllmdataset/
+'''
+MocklyLLMDataset/
 │
 ├── data/
 │   ├── asr_transcripts/           # transcribed json files from whisper (wav → text)
@@ -41,7 +42,7 @@ mocklyllmdataset/
 ├── .gitignore                         # ignores venv, .env, audio files, etc.
 ├── requirements.txt                   # all python packages used in the project
 └── README.md                          # project description, setup, usage, and goals
-
+'''
 
 ## Setup
 
