@@ -6,7 +6,7 @@ well-labeled transcripts that will serve as the foundation for evaluating candid
 
 ## Project Structure
 
-'''
+```
 MocklyLLMDataset/
 │
 ├── data/
@@ -42,7 +42,7 @@ MocklyLLMDataset/
 ├── .gitignore                         # ignores venv, .env, audio files, etc.
 ├── requirements.txt                   # all python packages used in the project
 └── README.md                          # project description, setup, usage, and goals
-'''
+```
 
 ## Setup
 
