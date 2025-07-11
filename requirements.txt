@@ -1,0 +1,8 @@
+yt-dlp
+ffmpeg-python
+openai
+python-dotenv
+httpx
+label-studio
+whisper
+regex
