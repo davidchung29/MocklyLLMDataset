@@ -49,7 +49,7 @@ MocklyLLMDataset/
 1. Create and activate a Python virtual environment.
 2. Install dependencies: `pip install -r requirements.txt`
 3. Set environment variables in a `.env` file:<br>
-OPENAI_API_KEY=your_api_key_here<br>
+OPENROUTER_API_KEY=your_api_key_here
 LOCAL_FILES_SERVING_ENABLED=true<br>
 LOCAL_FILES_DOCUMENT_ROOT=path/to/your/for_labeling/folder
 
