@@ -1,34 +1,48 @@
-<!--
-    This Label Studio labeling config displays an interview question and its answer,
-    then allows annotators to rate the response using the STAR framework (Situation, Task,
-    Action, Result), each on a scale of 1–3. Additionally, the annotator provides an overall
-    quality score (1–5).
-
-  @annotations
-    - STAR Ratings (S, T, A, R): 1 to 3
-    - Quality: 1 to 5
-
-  @usage
-    - place this XML in Label Studio during project setup under "Labeling Interface"
-    - Supports JSONL input format: {"id": ..., "data": { "question": "...", "answer": "...", "clarity": float }}
--->
-
 <View>
   <Header value="Question" />
   <Text name="qtext" value="$question" />
 
-  <Header value="Answer" />
+  <Header value="Answer (highlight STAR parts and narrator comments below)" />
+  
+  <Style>
+    .lsf-labels__container {
+      margin-bottom: -15px;
+    }
+
+    /* Hide all keyboard shortcut hints (superscripts, spans, etc.) */
+    sup, 
+    span.lsf-keyboard-shortcut, 
+    .lsf-labels__container sup, 
+    .lsf-labels__container span.lsf-keyboard-shortcut {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      line-height: 0 !important;
+      font-size: 0 !important;
+    }
+  </Style>
+  
+  <Labels name="star_labels" toName="atext" allowEmpty="true" editable="true">
+    <Label value="Situation" background="blue" />
+    <Label value="Task" background="orange" />
+    <Label value="Action" background="green" />
+    <Label value="Result" background="purple" />
+    <Label value="Narrator Comment" background="gray" />
+  </Labels>
+
   <Text name="atext" value="$answer" />
 
-  <Header value="clarity (auto-calculated)" />
+  <Header value="Clarity (auto-calculated)" />
   <Text name="clarity_score" value="Clarity: $clarity" />
 
-  <Header value="rate STAR components (1–3 points each)" />
-  <Rating name="s_score" toName="atext" minRating="1" maxRating="3" label="S (Situation)" />
-  <Rating name="t_score" toName="atext" minRating="1" maxRating="3" label="T (Task)" />
-  <Rating name="a_score" toName="atext" minRating="1" maxRating="3" label="A (Action)" />
-  <Rating name="r_score" toName="atext" minRating="1" maxRating="3" label="R (Result)" />
-
-  <Header value="overall quality (1–5)" />
-  <Rating name="quality" toName="atext" minRating="1" maxRating="5" />
+  <Header value="Quality Score (rate 1 to 5)" />
+  <Choices name="quality_score" toName="atext" showInLine="true" choice="single">
+    <Choice value="1" />
+    <Choice value="2" />
+    <Choice value="3" />
+    <Choice value="4" />
+    <Choice value="5" />
+  </Choices>
 </View>
